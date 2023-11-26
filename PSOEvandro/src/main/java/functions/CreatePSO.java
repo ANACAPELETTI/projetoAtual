@@ -2,6 +2,7 @@ package functions;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import entity.ImageEntity;
 import entity.PSOEntity;
 import util.PSOUtils;
@@ -40,7 +41,8 @@ public class CreatePSO {
 
 			psoEntity.setBiasParticle(PSOUtils.createBias(nKernelsLayers, kernelsSize));
 			psoEntity.setBiasVelocity(PSOUtils.createBiasVelocity(nKernelsLayers, kernelsSize));
-			psoEntity.setBiasParticle(psoEntity.getBiasParticle());
+			psoEntity.setBiasMelhorLocal(psoEntity.getBiasParticle());
+			
 			
 			List<List<List<Double>>> Layers = new ArrayList<List<List<Double>>>();
 			List<List<Double>> layer0 = new ArrayList<List<Double>>();
@@ -126,9 +128,15 @@ public class CreatePSO {
 			
 			psoEntity.setErroGlobal(sumErros);
 
+			
+			
+			
 			listPSOEntity.add(psoEntity);
+
 		}
+
 		return listPSOEntity;
+
 	}
 
 }

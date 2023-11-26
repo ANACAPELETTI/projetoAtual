@@ -12,6 +12,7 @@ public class PSOUtils {
 	//*static long seed = 12345;
 
 	public static List<List<List<Double>>> createKernels(int nKernels, int nLayers, int kernelSize) {
+		
 
 		List<List<List<Double>>> newKernels = new ArrayList<List<List<Double>>>();
 
@@ -51,33 +52,30 @@ public class PSOUtils {
 		return newKernels;
 	}
 	
-	public static List<List<Double>> createBias(int nLayers, int kernelSize) {
+	public static List<Double> createBias(int nLayers, int kernelSize) {
 
-		List<List<Double>> biasList = new ArrayList<List<Double>>();
+		List<Double> biasList = new ArrayList<Double>();
 
 		for (int i = 0; i < nLayers; i++) {
-			List<Double> bias = new ArrayList<Double>();
-			for(int j = 0; j < kernelSize; j++) {
+		
 				Random random = new Random();
-				bias.add(10*random.nextGaussian());
-			}
-			biasList.add(bias);
+				biasList.add(10*random.nextGaussian());
+			
 		}
 
 		return biasList;
 
 	}
 
-	public static List<List<Double>> createBiasVelocity(int nLayers, int kernelSize) {
+	public static List<Double> createBiasVelocity(int nLayers, int kernelSize) {
 
-		List<List<Double>> biasList = new ArrayList<List<Double>>();
+		List<Double> biasList = new ArrayList<Double>();
 
 		for (int i = 0; i < nLayers; i++) {
-			List<Double> bias = new ArrayList<Double>();
-			for(int j = 0; j < kernelSize; j++) {
-				bias.add(0.0);
-			}
-			biasList.add(bias);
+			
+		
+			
+			biasList.add(0.0);
 		}
 
 		return biasList;
@@ -214,7 +212,8 @@ public static List<Double> newConnectedVelocity(List<Double>  oldVelocity, List<
 		for(int i = 0; i < psoEntityList.size(); i++) {
 			if(i == melhorPosicao) {
 				psoEntityList.get(i).setMelhorGlobal(true);
-				System.out.println("Melhor Erro: "+psoEntityList.get(i).getErroGlobal());
+				int nImages = psoEntityList.get(i).getLayers().get(0).size();
+				System.out.println("Taxa de acertos: " + 100*( nImages- psoEntityList.get(i).getErroGlobal() )/nImages+"%");
 			}else {
 				psoEntityList.get(i).setMelhorGlobal(false);	
 				
@@ -223,4 +222,43 @@ public static List<Double> newConnectedVelocity(List<Double>  oldVelocity, List<
 	}
 	
 
+	public static List<Double> atualizaBias(List<Double>  bias, List<Double>  biasVelocity, boolean melhor) {
+		
+		int m = bias.size();
+	
+	
+		for (int i = 0; i < m; i++) {
+			if(!melhor) {
+				bias.set(i, bias.get(i) + biasVelocity.get(i));
+			}
+			
+		}
+		return bias;
+	}
+
+	public static List<Double> atualizaBiasVelocidade(
+			List<Double> biasVelocity, 
+			List<Double> melhorGlobal, 
+			List<Double> melhorLocal,
+			List<Double> bias, double omega) {
+		int m = biasVelocity.size();
+		
+		double pesoLocal = 0.5;
+		double pesoGlobal = 1.1;
+		Random random = new Random();
+		for (int i = 0; i < m; i++) {
+			double newVelocity = biasVelocity.get(i) * omega
+						+ pesoGlobal * random.nextFloat() * (melhorGlobal.get(i) - bias.get(i))
+						+ pesoLocal * random.nextFloat() * (melhorLocal.get(i) - bias.get(i));
+			biasVelocity.set(i, newVelocity);
+			/*
+			double newVelocity =
+					+ pesoGlobal * random.nextFloat() * (melhorGlobal.get(i) - kernel.get(i))
+					+ pesoLocal * random.nextFloat() * (melhorLocal.get(i) - kernel.get(i));
+		velocidade.set(i, newVelocity);*/
+			
+		}
+		return biasVelocity;
+	}
+	
 }

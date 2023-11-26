@@ -10,6 +10,7 @@ import java.util.List;
 
 import entity.ImageEntity;
 import entity.PSOEntity;
+import util.Bias;
 import util.FullConected;
 import util.ImageReader;
 import util.Kernels;
@@ -68,12 +69,11 @@ public class ClassificadorTesteController {
 		if (caminho != "") {
 			try {
 				FileInputStream file = new FileInputStream(new File(caminho));
-				System.out.println(selectedFile.getAbsolutePath());
 				List<Double> imageMatriz = imageReader.imageReader(selectedFile.getAbsolutePath());
 				List<ImageEntity> listImageMatriz = new ArrayList<ImageEntity>();
 				ImageEntity imageEntity = new ImageEntity(imageMatriz, selectedFile.getName().charAt(0));
 				listImageMatriz.add(imageEntity);
-				Image imagem = new Image(selectedFile.getAbsolutePath());
+				Image imagem = new Image(selectedFile.toURI().toString());
 				
 				loadView.loadView("/gui/Resultado.fxml", (ResultadoController controller) -> {
 	                controller.setPane3(anchorPane);
@@ -104,60 +104,46 @@ public class ClassificadorTesteController {
 	}
 	
 	@FXML
-	void handleFileDroppedEvent(DragEvent event) { //função que pega a imagem do usuário, quando ele arrastar ela
+	void handleFileDroppedEvent(DragEvent event) throws IOException { //função que pega a imagem do usuário, quando ele arrastar ela
 	    Dragboard db = event.getDragboard();
 	    String caminho = "";
 	    File file2 = db.getFiles().get(0);
 	    if (file2 != null) {
 			caminho = file2.getPath();
 		}
-		/*if (caminho != "") {
+	    if (caminho != "") {
 			try {
 				FileInputStream file = new FileInputStream(new File(caminho));
-				float[][] imageMatriz = imageReader.imageReader(file2.getAbsolutePath());
-				List<float[][]> listImageMatriz = new ArrayList<float[][]>();
-				listImageMatriz.add(imageMatriz);
-				Image imagem = new Image(file2.getAbsolutePath());
-
-				int[] pooling1 = {1, 2}; //pooling mínimo, com tamanho 2
-				int[] pooling2 = {2, 2}; //pooling médio, com tamanho 2
-				int[] pooling3 = {3, 2}; //pooling máximo, com tamanho 2
-				
-				
-				List<int[]> listaPoolings = new ArrayList<int[]>(Arrays.asList(pooling1, pooling1, pooling1, pooling1));
-				feedfowardEntity.setListaPoolings(listaPoolings);
-				
-				List<Integer> listaOrdemOperacoes = new ArrayList<Integer>(Arrays.asList(0, 1, 0, 1, 0, 0));
-				List<List<List<float[][]>>> kernels = new ArrayList<List<List<float[][]>>>();
-				
-				kernels.add(Kernels.listaDeMatrizes());
-				
-				float resultadoFeedfoward = feedfoward.feedfoward(listaOrdemOperacoes, listImageMatriz, kernels.get(0), listaPoolings);
-				
-				String resultado = String.valueOf(classificador.classifica(resultadoFeedfoward, 0));
+				List<Double> imageMatriz = imageReader.imageReader(file2.getAbsolutePath());
+				List<ImageEntity> listImageMatriz = new ArrayList<ImageEntity>();
+				ImageEntity imageEntity = new ImageEntity(imageMatriz, file2.getName().charAt(0));
+				listImageMatriz.add(imageEntity);
+				Image imagem = new Image(file2.toURI().toString());
 				
 				loadView.loadView("/gui/Resultado.fxml", (ResultadoController controller) -> {
 	                controller.setPane3(anchorPane);
 	                controller.setImage(imagem);
 
 	                Platform.runLater(() -> {
-	                    classificaTexto(anchorPane, listImageMatriz, imagem);
+	                    try {
+							classificaTexto(anchorPane, listImageMatriz, imagem);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 	                });
 	            }, anchorPane);
-				System.out.println(classificador.classifica(resultadoFeedfoward, 0));
-				
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				System.out.println("Teste");
 			}
-		}*/
+		}
 	}
 	
 	public void classificaTexto(AnchorPane anchorPane, List<ImageEntity> listImageMatriz, Image imagem) throws InterruptedException {
 		System.out.println("Classifica texto");
+		System.out.println(Bias.listaDeMatrizes().get(0));
+		psoEntity.setBiasParticle(Bias.listaDeMatrizes());
+		
 		int[] pooling1 = {2, 2}; //pooling mínimo, com tamanho 2
-		//int[] pooling2 = {2, 2}; //pooling médio, com tamanho 2
 		
 		int kernelsSize = 13;
 		int nkernels = 10;

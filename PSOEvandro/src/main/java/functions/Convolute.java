@@ -7,7 +7,7 @@ import entity.PSOEntity;
 
 public class Convolute {
 
-	public static List<Double> convolveLists(List<Double> layer, List<Double> kernel) {
+	public static List<Double> convolveLists(List<Double> layer, List<Double> kernel, double bias) {
 
 		List<Double> output = new ArrayList<Double>();
 
@@ -28,7 +28,7 @@ public class Convolute {
 					}
 
 				}
-				output.add(valor);
+				output.add(valor+bias);
 
 			}
 
@@ -45,7 +45,7 @@ public class Convolute {
 			for (int j = 0; j < psoEntity.getKernels().get(kernelsIndex).size(); j++) {
 				
 				newLayer.add(convolveLists(psoEntity.getLayers().get(layerIndex).get(i),
-						psoEntity.getKernels().get(kernelsIndex).get(j)));
+						psoEntity.getKernels().get(kernelsIndex).get(j),psoEntity.getBiasParticle().get(kernelsIndex)));
 			}
 		}
 		

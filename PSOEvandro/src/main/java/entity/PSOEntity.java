@@ -19,9 +19,11 @@ public class PSOEntity {
 	private List<Double> fullyConectedVelocity;
 	private List<Double> fullyConectedMelhorLocal;
 	
-	private List<List<Double>> biasParticle;
-	private List<List<Double>> biasVelocity;
-	private List<List<Double>> biasMelhorLocal;
+	private List<Double> biasParticle;
+	private List<Double> biasVelocity;
+	private List<Double> biasMelhorLocal;
+	
+	private List<Character> letrasClassificadas;
 	
 	private List<Double> Errors;
 	private List<List<List<Double>>> Layers;
@@ -168,30 +170,36 @@ public class PSOEntity {
 		this.erroGlobal = erroGlobal;
 	}
 
-	public ArrayList<List<Double>> getBiasParticle() {
-		return new ArrayList<List<Double>>(biasParticle);
+	public List<Double> getBiasParticle() {
+		return new ArrayList<Double>(biasParticle);
 	}
 
-	public void setBiasParticle(List<List<Double>> biasParticle) {
+	public void setBiasParticle(List<Double> biasParticle) {
 		this.biasParticle = biasParticle;
 	}
 
-	public ArrayList<List<Double>> getBiasVelocity() {
-		return new ArrayList<List<Double>>(biasVelocity);
+	public List<Double> getBiasVelocity() {
+		return new ArrayList<Double>(biasVelocity);
 	}
 
-	public void setBiasVelocity(List<List<Double>> biasVelocity) {
+	public void setBiasVelocity(List<Double> biasVelocity) {
 		this.biasVelocity = biasVelocity;
 	}
 
-	public ArrayList<List<Double>> getBiasMelhorLocal() {
-		return new ArrayList<List<Double>>(biasMelhorLocal);
+	public List<Double> getBiasMelhorLocal() {
+		return new ArrayList<Double>(biasMelhorLocal);
 	}
 
-	public void setBiasMelhorLocal(List<List<Double>> biasMelhorLocal) {
+	public void setBiasMelhorLocal(List<Double> biasMelhorLocal) {
 		this.biasMelhorLocal = biasMelhorLocal;
 	}
 
-	
+	public List<Character> getLetrasClassificadas() {
+		return new ArrayList<Character> (letrasClassificadas);
+	}
+
+	public void setLetrasClassificadas(List<Character> letrasClassificadas) {
+		this.letrasClassificadas = letrasClassificadas;
+	}
 	
 }

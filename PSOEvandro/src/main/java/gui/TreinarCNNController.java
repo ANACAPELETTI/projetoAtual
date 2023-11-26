@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import entity.ImageEntity;
 import entity.PSOEntity;
@@ -14,13 +15,20 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -33,6 +41,7 @@ public class TreinarCNNController {
 	List<ImageEntity> listaImages;
 	List<String> listaListaResultado = new ArrayList<String>(); 
 	ObservableList <String> observableList;
+	Thread firstThread;
 	
 	@FXML
 	private AnchorPane pane3;
@@ -78,6 +87,51 @@ public class TreinarCNNController {
 	
 	@FXML
 	private Button carregarImagens;
+	
+	@FXML
+	public ScrollPane scrollPaneMaster;
+	
+	@FXML
+	private Label labelAcuracia;
+	
+	@FXML
+	Label labelVertical = new Label();
+	
+	@FXML
+	Label labelHorizontal = new Label();
+	
+	@FXML
+	GridPane matrizConfusao = new GridPane();
+	
+	@FXML
+	GridPane matrizConfusaoMaster = new GridPane();
+	
+	private TextField[] textFields;
+	
+	public void initialize() {
+	    textFields = new TextField[]{textFieldParticula, textFieldIteracao, textFieldKernels, textFieldTamKernel, textFieldTamPoolings, textFieldOrdem};
+
+	    for (int i = 0; i < textFields.length - 1; i++) {
+	        int currentIndex = i;
+	        int nextIndex = i + 1;
+
+	        textFields[currentIndex].setOnKeyPressed(event -> {
+	            if (event.getCode() == KeyCode.TAB) {
+	                event.consume();
+	                textFields[nextIndex].requestFocus();
+	            }
+	        });
+	    }
+
+	    // Último campo de texto para voltar ao primeiro campo
+	    textFields[textFields.length - 1].setOnKeyPressed(event -> {
+	        if (event.getCode() == KeyCode.TAB) {
+	            event.consume();
+	            textFields[0].requestFocus();
+	        }
+	    });
+	}
+
 
 	public void setPane3(AnchorPane pane3) {
 		this.pane3 = pane3;
@@ -99,11 +153,19 @@ public class TreinarCNNController {
 		textFieldParticula.clear();
 		textFieldOrdem.clear();
 		listViewResult.getItems().clear();
+		matrizConfusao.getChildren().clear();
+		matrizConfusaoMaster.setVisible(false);
+		labelVertical.setVisible(false);
+        labelHorizontal.setVisible(false);
 	}
 	
 	@FXML
 	public void pararTreinamento() {
-		
+		if(firstThread.isAlive()) {
+			firstThread.currentThread();
+			System.out.println("Thread viva");
+		}
+		System.out.println("Parar treino");
 	}
 	
 	@FXML
@@ -162,8 +224,8 @@ public class TreinarCNNController {
 		PSOUtils.setMelhorGlobal(listPSOEntity);
 		double omega = 0.9;
 		double omegaF = 0.7;
-		
-		Thread firstThread = new Thread(() -> {
+		CountDownLatch latch = new CountDownLatch(1);
+		firstThread = new Thread(() -> {
 			for(int iteracao = 0; iteracao < nIteracoes; iteracao++) {
 				try {
 					IteratePSO.refreshPSO(listPSOEntity,listaImages, omega);
@@ -187,26 +249,24 @@ public class TreinarCNNController {
 				listaListaResultado.add("Iteração: " + (iteracao + 1) + ", Melhor partícula: " + listPSOEntity.indexOf(achaAMelhorGlobal(listPSOEntity)) + ", Menor erro: " + 
 				achaAMelhorGlobal(listPSOEntity).getErroGlobal());
 				observableList = FXCollections.observableArrayList(listaListaResultado);
-				listViewResult.setItems(observableList);
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				Platform.runLater(() -> {
+				    listViewResult.setItems(observableList); // Exemplo de atualização de um ListView
+				});
 				}
-				
-				}
+				latch.countDown();
 			});
-	
+			
 			Platform.runLater(() -> {
-		});
-
-		try {
-			firstThread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			});
 		firstThread.start();
+		try {
+		    latch.await(); // Aguarda o término da primeira thread
+		    //exibirMatriz(psoEntityEntrada, listImageEntity); // CORRIGIR
+		    exibirMatriz(achaAMelhorGlobal(listPSOEntity), listaImages);
+		    labelAcuracia.setText(String.format("%.2f", (100*(listaImages.size() - achaAMelhorGlobal(listPSOEntity).getErroGlobal())/listaImages.size())) + "%");
+		} catch (InterruptedException e) {
+		    // Trate a exceção, se necessário
+		}
 	}
 	
 	@FXML
@@ -246,5 +306,70 @@ public class TreinarCNNController {
 			}
 		}
 		return melhorGlobal;
+	}
+	
+	private void exibirMatriz(PSOEntity psoEntityEntrada, List<ImageEntity> listImageEntity) {
+		matrizConfusaoMaster.setVisible(true);
+		matrizConfusao.setGridLinesVisible(true);
+		labelVertical.setVisible(true);
+        labelHorizontal.setVisible(true);
+        // Limpe o GridPane antes de criar uma nova matriz
+        matrizConfusao.getChildren().clear();
+        matrizConfusao.getColumnConstraints().clear();
+        matrizConfusao.getRowConstraints().clear();
+
+        matrizConfusao.setGridLinesVisible(true);
+        
+        int[][] matriz = new int[12][12];
+        
+        List<Character> alphabet = Arrays.asList('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        
+        // Obtenha o número de linhas e colunas da matriz
+        int linhas = 11;
+        int colunas = 11;
+        
+        double larguraFixa = 35.0;
+        
+        for (int imagem = 0; imagem < psoEntityEntrada.getLetrasClassificadas().size(); imagem++) {
+        	int i = alphabet.indexOf(psoEntityEntrada.getLetrasClassificadas().get(imagem));
+	        int j = alphabet.indexOf(listImageEntity.get(imagem).getLabel());
+	        matriz[i+1][j+1] += 1;
+        }
+        
+        for (int linha = 0; linha < linhas; linha++) {
+        	matriz[linha+1][0] = linha;
+            for (int coluna = 0; coluna < colunas; coluna++) {
+            	matriz[0][coluna+1] = coluna;
+                Label label = new Label(String.valueOf(matriz[linha][coluna]));
+                label.setMinSize(larguraFixa, larguraFixa);
+                label.setMaxSize(larguraFixa, larguraFixa);
+                label.setPrefSize(larguraFixa, larguraFixa);
+                label.setAlignment(Pos.CENTER);
+
+                matrizConfusao.add(label, coluna, linha); // Adiciona a label na coluna e linha corretas
+
+                if (matrizConfusao.getColumnConstraints().size() <= coluna) { // Configuração para ajustar o tamanho de todas as colunas
+                    matrizConfusao.getColumnConstraints().add(new ColumnConstraints(larguraFixa));
+                } else {
+                    matrizConfusao.getColumnConstraints().get(coluna).setMinWidth(larguraFixa);
+                    matrizConfusao.getColumnConstraints().get(coluna).setMaxWidth(larguraFixa);
+                    matrizConfusao.getColumnConstraints().get(coluna).setPrefWidth(larguraFixa);
+                }
+            }
+            matrizConfusao.getRowConstraints().add(new RowConstraints(larguraFixa)); // Configuração para ajustar o tamanho de todas as linhas
+        }
+        
+        colorirDiagonalPrincipal(matrizConfusao, 11);
+    }
+	
+	private void colorirDiagonalPrincipal(GridPane gridPane, int tamanho) {
+		for (Node node : gridPane.getChildren()) {
+	        Integer columnIndex = GridPane.getColumnIndex(node);
+	        Integer rowIndex = GridPane.getRowIndex(node);
+	        
+	        if (columnIndex != null && rowIndex != null && columnIndex.equals(rowIndex)) {
+	            node.setStyle("-fx-background-color: #d3e8f1;");
+	        }
+	    }
 	}
 }

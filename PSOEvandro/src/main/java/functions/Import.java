@@ -13,55 +13,70 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import entity.PSOEntity;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import util.Kernels;
 
 public class Import {
+	public static List<Double> loadExcelBias(String caminho) throws Exception {
+		List<Double> kernels = new ArrayList<Double>();
+		FileInputStream file = new FileInputStream(new File(caminho));
 
-	public List<List<float[][]>> loadExcelFile(
-			// ManipulateNode ReturnE,
-			int tamanhoKernel, int numeroKernels
+		Workbook workBook = new XSSFWorkbook(file);
+		List<Sheet> listaPlanilhas = new ArrayList<Sheet>();
 
-	) throws Exception {
-		File selectedFile;
-		List<List<float[][]>> particulasKernel = new ArrayList<List<float[][]>>();
-
-		String caminho = "";
-
-		ExtensionFilter xls = new ExtensionFilter("Excel (*.xls, *.xlsx)", "*.xls", "*.xlsx");
-
-		FileChooser fileChooser = new FileChooser();
-
-		fileChooser.getExtensionFilters().addAll(xls);
-
-		selectedFile = fileChooser.showOpenDialog(null);
-		if (selectedFile != null) {
-			caminho = selectedFile.getPath();
+		Sheet sheet = workBook.getSheetAt(workBook.getNumberOfSheets() - 1);
+		listaPlanilhas.add(sheet);
+		List<List<Double>> listaKernel = new ArrayList<List<Double>>();
+		int linha = 0;
+		
+		while (sheet.getRow(0).getCell(linha) != null) {
+			System.out.println(sheet.getRow(0).getCell(linha));
+			kernels.add(Double.valueOf(sheet.getRow(0).getCell(linha).toString()));
+			linha++;
 		}
-		if (caminho != "") {
-			FileInputStream file = new FileInputStream(new File(caminho));
+		return kernels;
+	}
 
-			Workbook workBook = new XSSFWorkbook(file);
-			List<Sheet> listaPlanilhas = new ArrayList<Sheet>();
+	public static List<Double> loadExcelFullyConected(String caminho) throws Exception {
+		List<Double> kernels = new ArrayList<Double>();
+		FileInputStream file = new FileInputStream(new File(caminho));
 
-			for (int i = 0; i < workBook.getNumberOfSheets(); i++) {
+		Workbook workBook = new XSSFWorkbook(file);
+		List<Sheet> listaPlanilhas = new ArrayList<Sheet>();
+
+		Sheet sheet = workBook.getSheetAt(workBook.getNumberOfSheets() - 2);
+		listaPlanilhas.add(sheet);
+		List<List<Double>> listaKernel = new ArrayList<List<Double>>();
+		int linha = 0;
+		while (sheet.getRow(0).getCell(linha) != null) {
+			kernels.add(Double.valueOf(sheet.getRow(0).getCell(linha).toString()));
+			linha++;
+		}
+		return kernels;
+	}
+
+	public static List<List<List<Double>>> loadExcelKernels(String caminho, int tamanhoKernel, int numeroKernels) throws Exception {
+		FileInputStream file = new FileInputStream(new File(caminho));
+
+		Workbook workBook = new XSSFWorkbook(file);
+		List<Sheet> listaPlanilhas = new ArrayList<Sheet>();
+			
+			List<List<List<Double>>> particulasKernel = new ArrayList<List<List<Double>>>();
+
+			for (int i = 0; i < workBook.getNumberOfSheets() -2; i++) {
 				Sheet sheet = workBook.getSheetAt(i);
 				listaPlanilhas.add(sheet);
-				List<float[][]> listaKernel = new ArrayList<float[][]>();
-				int contador = 0;
+				List<List<Double>> listaKernel = new ArrayList<List<Double>>();
 				for (int j = 0; j < numeroKernels; j++) {
-					float[][] kernels = new float[tamanhoKernel][tamanhoKernel];
-					for (int linha = 0; linha < tamanhoKernel; linha++) {
-						for (int coluna = 0; coluna < tamanhoKernel; coluna++) {
-							Cell cell = sheet.getRow(contador).getCell(coluna);
-							kernels[linha][coluna] = Float.valueOf(cell.toString());
-						}
-						contador++;
+					List<Double> kernels = new ArrayList<Double>();
+					for (int linha = 0; linha < tamanhoKernel*tamanhoKernel; linha++) {
+							Cell cell = sheet.getRow(j).getCell(linha);
+							kernels.add(Double.valueOf(cell.toString()));
 					}
 					listaKernel.add(kernels);
 				}
 				particulasKernel.add(listaKernel);
 			}
 
-		}
 		return particulasKernel;
 	}
 }

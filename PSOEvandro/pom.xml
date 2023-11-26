@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>projetoana</groupId>
-  <artifactId>projetoana</artifactId>
+  <groupId>PSOEvandro</groupId>
+  <artifactId>PSOEvandro</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -12,16 +12,6 @@
 
 
 	<dependencies>
-
-
-
-
-
-	<dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-web</artifactId>
-        <version>19</version>
-    </dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.googlecode.efficient-java-matrix-library/ejml -->
 		<dependency>
@@ -78,26 +68,26 @@
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
-			<version>19</version>
+			<version>21.0.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
-			<version>19</version>
+			<version>21.0.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-graphics -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
-			<version>19</version>
+			<version>21.0.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx</artifactId>
-			<version>19</version>
+			<version>21.0.1</version>
 			<type>pom</type>
 		</dependency>
 
