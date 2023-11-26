@@ -17,7 +17,11 @@
 
 
 
-
+	<dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-web</artifactId>
+        <version>19</version>
+    </dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.googlecode.efficient-java-matrix-library/ejml -->
 		<dependency>

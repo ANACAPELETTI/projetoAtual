@@ -1,5 +1,8 @@
 package gui;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -36,7 +39,7 @@ public class MainViewController implements Initializable{
 	Button novaTela;
 	
 	@FXML
-	Button PSO;
+	Button TreinarCNN;
 	
 	@FXML
 	Button classificador;
@@ -96,8 +99,23 @@ public class MainViewController implements Initializable{
         }, pane3 );
 	}
 	
+	
 	@FXML
-	public void executarPso () {
-        
+	public void abreNavegador () {
+		try {
+		    Desktop.getDesktop().browse(new URL("https://r4dmx7.csb.app").toURI());
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch (URISyntaxException e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void treinarCNN () {
+		LoadView loadView = new LoadView();
+        loadView.loadView("/gui/treinarCNN.fxml", (TreinarCNNController controller) ->  {
+        	controller.Reiniciar();
+        }, pane3 );
 	}
 }

@@ -50,23 +50,20 @@
                         <Image url="@images/user.png" />
                      </image>
                   </ImageView>
+                  <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/burger.png" />
+                     </image>
+                  </ImageView>
                </children>
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="pane2" layoutY="46.0" prefHeight="454.0" prefWidth="760.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="46.0">
+      <AnchorPane fx:id="pane2" layoutY="46.0" prefHeight="454.0" prefWidth="759.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="46.0">
          <children>
             <VBox prefHeight="454.0" prefWidth="160.0" spacing="8.0" styleClass="sideBar" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="600.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Button fx:id="novaTela" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#classificar" prefHeight="38.0" prefWidth="203.0" style="-fx-background-color: white;" text="Tela Dev">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </Button>
-                  <Button fx:id="PSO" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#executarPso" prefHeight="38.0" prefWidth="203.0" style="-fx-background-color: white;" text="Ajuda">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -82,6 +79,22 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
+                  <Button fx:id="TreinarCNN" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#treinarCNN" prefHeight="38.0" prefWidth="203.0" style="-fx-background-color: white;" text="Treinar CNN">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#abreNavegador" prefHeight="38.0" prefWidth="203.0" style="-fx-background-color: white;" text="Ajuda">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
                <padding>
                   <Insets top="18.0" />
@@ -89,11 +102,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="pane3" layoutY="91.0" onMouseClicked="#onClick" prefHeight="409.0" prefWidth="600.0" styleClass="fundo" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="91.0">
-         <padding>
-            <Insets top="10.0" />
-         </padding>
-      </AnchorPane>
+      <AnchorPane fx:id="pane3" layoutY="91.0" onMouseClicked="#onClick" prefHeight="409.0" prefWidth="600.0" styleClass="fundo" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0" />
       <AnchorPane prefHeight="454.0" prefWidth="44.0" styleClass="sideBar" stylesheets="@styles.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
          <children>
             <VBox alignment="TOP_CENTER" layoutX="1.0" layoutY="-2.0" onMouseClicked="#openOnClick" prefHeight="454.0" prefWidth="44.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -108,7 +117,7 @@
                   </ImageView>
                   <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/home.png" />
+                        <Image url="@images/user.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -116,7 +125,15 @@
                   </ImageView>
                   <ImageView fitHeight="46.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/user.png" />
+                        <Image url="@images/modelTraining.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fitHeight="33.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/interrogação.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />

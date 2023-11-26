@@ -10,6 +10,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 
 public class DevViewController {
 	@FXML
@@ -25,8 +27,16 @@ public class DevViewController {
 	GridPane matrizConfusao = new GridPane();
 	
 	@FXML
+	WebView webView = new WebView();
+	
+	@FXML
+	WebEngine Engine;
+	
+	@FXML
     public void criarMatrizConfusao() {
         // Chame o método para criar e exibir a matriz durante a inicialização da interface
+		Engine = webView.getEngine();
+		Engine.load("https://www.google.com");
         exibirMatriz();
     }
 	
