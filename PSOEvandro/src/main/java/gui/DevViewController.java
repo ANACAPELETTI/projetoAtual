@@ -27,16 +27,8 @@ public class DevViewController {
 	GridPane matrizConfusao = new GridPane();
 	
 	@FXML
-	WebView webView = new WebView();
-	
-	@FXML
-	WebEngine Engine;
-	
-	@FXML
     public void criarMatrizConfusao() {
         // Chame o método para criar e exibir a matriz durante a inicialização da interface
-		Engine = webView.getEngine();
-		Engine.load("https://www.google.com");
         exibirMatriz();
     }
 	

@@ -90,7 +90,7 @@ public class TreinarCNNController {
 	@FXML
 	public void Reiniciar() {
 		Tooltip.install(tooltipHelp, new Tooltip("Utilize 0 para convolução e 1 para pooling,\nseparados por vírgula."));
-		Tooltip.install(tooltipHelp2, new Tooltip("Digite os tamanhos dos poolings separados por vírgula"));
+		Tooltip.install(tooltipHelp2, new Tooltip("Digite os tamanhos dos poolings separados por vírgula."));
 		disableButtons();
 		textFieldTamKernel.clear();
 		textFieldTamPoolings.clear();
