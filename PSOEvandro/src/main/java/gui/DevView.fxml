@@ -94,6 +94,12 @@
                                                 <Label fx:id="labelAcuracia" alignment="CENTER" />
                                              </children>
                                           </HBox>
+                                          <HBox alignment="CENTER" spacing="5.0">
+                                             <children>
+                                                <Label alignment="CENTER" text="Número de imagens:" />
+                                                <Label fx:id="labelNumImagens" alignment="CENTER" />
+                                             </children>
+                                          </HBox>
                                           <HBox alignment="CENTER">
                                              <children>
                                                 <Label alignment="CENTER" text="Matriz de confusão" />

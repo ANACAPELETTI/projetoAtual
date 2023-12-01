@@ -48,7 +48,7 @@ public class Pooling {
 		int poolingSize = psoEntity.getListaPoolings().get(poolingIndex)[1];
 	
 		for (int i = 0; i < psoEntity.getLayers().get(layerIndex).size(); i++) {
-			
+				
 				newLayer.add(poolingLists(psoEntity.getLayers().get(layerIndex).get(i), poolingSize));
 				
 		}
@@ -56,6 +56,5 @@ public class Pooling {
 		//System.out.println(newLayer.get(poolingIndex).size());
 		//TimeUnit.SECONDS.sleep(1);
 		psoEntity.setLayer(newLayer, layerIndex + 1);
-
 	}
 }

@@ -127,14 +127,12 @@ public class CreatePSO {
 			psoEntity.setErrors(erros);
 			
 			psoEntity.setErroGlobal(sumErros);
-
 			
 			
 			
 			listPSOEntity.add(psoEntity);
 
 		}
-
 		return listPSOEntity;
 
 	}

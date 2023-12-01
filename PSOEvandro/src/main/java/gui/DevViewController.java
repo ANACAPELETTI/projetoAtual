@@ -20,6 +20,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -52,6 +53,9 @@ public class DevViewController {
 	Label labelHorizontal = new Label();
 	
 	@FXML
+	Label labelNumImagens = new Label();
+	
+	@FXML
 	GridPane matrizConfusao = new GridPane();
 	
 	@FXML
@@ -68,6 +72,32 @@ public class DevViewController {
 	
 	@FXML
 	private TextField textFieldTamKernel;
+	
+	private TextField[] textFields;
+	
+	public void initialize() {
+	    textFields = new TextField[]{textFieldKernels, textFieldTamKernel, textFieldTamPoolings, textFieldOrdem};
+
+	    for (int i = 0; i < textFields.length - 1; i++) {
+	        int currentIndex = i;
+	        int nextIndex = i + 1;
+
+	        textFields[currentIndex].setOnKeyPressed(event -> {
+	            if (event.getCode() == KeyCode.TAB) {
+	                event.consume();
+	                textFields[nextIndex].requestFocus();
+	            }
+	        });
+	    }
+
+	    // Último campo de texto para voltar ao primeiro campo
+	    textFields[textFields.length - 1].setOnKeyPressed(event -> {
+	        if (event.getCode() == KeyCode.TAB) {
+	            event.consume();
+	            textFields[0].requestFocus();
+	        }
+	    });
+	}
 	
 	@FXML
     public void criarMatrizConfusao() throws InterruptedException {
@@ -87,7 +117,6 @@ public class DevViewController {
 		
 		if (selectedFile != null) {
 			caminho = selectedFile.getPath();
-			System.out.println(caminho);
 		}
 		
 		if (caminho != "") {
@@ -106,7 +135,7 @@ public class DevViewController {
 		listaImages = LoadImages.loadImages(selectedFile.getAbsolutePath());
 		if(listaImages.size() > 0) {
 			enableButtons();
-			System.out.println("Número de imagens carregadas: " + listaImages.size());
+			labelNumImagens.setText(String.valueOf(listaImages.size()));
 		}
 	}
 	
@@ -165,9 +194,9 @@ public class DevViewController {
 
 		int nClassifications = 10; //10 números a ser classificados
 
-		List<PSOEntity> listPSOEntity = new ArrayList<PSOEntity>();
+		//List<PSOEntity> listPSOEntity = new ArrayList<PSOEntity>();
 		
-		listPSOEntity.add(psoEntity);
+		//listPSOEntity.add(psoEntity);
 		double omega = 0.9;
 		double omegaF = 0.7;
 		
@@ -219,9 +248,14 @@ public class DevViewController {
 		for (int i = 0; i < finalLayer.size(); i++) {
 			listFullyConnectedLayer.add(FullyConected.fullyConected(finalLayer.get(i),
 					psoEntityList.get(0).getFullyConectedLayerParticle()));
-
 		}
-
+		
+		System.out.println(psoEntityList.get(0).getLayers().get(0).size());
+		System.out.println(psoEntityList.get(0).getLayers().get(1).size());
+		System.out.println(psoEntityList.get(0).getLayers().get(2).size());
+		System.out.println(psoEntityList.get(0).getLayers().get(3).size());
+		System.out.println(psoEntityList.get(0).getLayers().get(4).size());
+		
 		List<Character> classification = new ArrayList<Character>();
 
 		List<Double> erros = new ArrayList<Double>();
@@ -244,8 +278,6 @@ public class DevViewController {
 
 		psoEntity.setLetrasClassificadas(classification);
 		exibirMatriz(psoEntity, listaImages);
-		System.out.println(listaImages.size());
-		System.out.println(psoEntityList.get(0).getErroGlobal());
 		labelAcuracia.setText(String.format("%.2f", (100*(listaImages.size() - psoEntityList.get(0).getErroGlobal())/listaImages.size())) + "%");
 	}
 	

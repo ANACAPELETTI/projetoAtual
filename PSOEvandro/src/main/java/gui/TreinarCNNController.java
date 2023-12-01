@@ -32,6 +32,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import util.Export;
 import util.LoadImages;
 import util.PSOUtils;
 
@@ -169,7 +170,7 @@ public class TreinarCNNController {
 	}
 	
 	@FXML
-	public void iniciarTreinamento() throws InterruptedException {
+	public void iniciarTreinamento() throws InterruptedException, IOException {
 		String primeiroElemento = listaListaResultado.get(0);
 		listaListaResultado.clear();
 		listaListaResultado.add(primeiroElemento);
@@ -250,7 +251,7 @@ public class TreinarCNNController {
 				achaAMelhorGlobal(listPSOEntity).getErroGlobal());
 				observableList = FXCollections.observableArrayList(listaListaResultado);
 				Platform.runLater(() -> {
-				    listViewResult.setItems(observableList); // Exemplo de atualização de um ListView
+				    listViewResult.setItems(observableList); //Atualização do ListView
 				});
 				}
 				latch.countDown();
@@ -264,8 +265,8 @@ public class TreinarCNNController {
 		    //exibirMatriz(psoEntityEntrada, listImageEntity); // CORRIGIR
 		    exibirMatriz(achaAMelhorGlobal(listPSOEntity), listaImages);
 		    labelAcuracia.setText(String.format("%.2f", (100*(listaImages.size() - achaAMelhorGlobal(listPSOEntity).getErroGlobal())/listaImages.size())) + "%");
+		    Export.exportExcel(achaAMelhorGlobal(listPSOEntity).getKernels(), achaAMelhorGlobal(listPSOEntity).getFullyConectedLayerParticle(), achaAMelhorGlobal(listPSOEntity).getBiasParticle());
 		} catch (InterruptedException e) {
-		    // Trate a exceção, se necessário
 		}
 	}
 	

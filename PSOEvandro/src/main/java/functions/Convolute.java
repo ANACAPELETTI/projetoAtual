@@ -50,7 +50,6 @@ public class Convolute {
 		}
 		
 		psoEntity.setLayer(newLayer, layerIndex + 1);
-
 	}
 
 }

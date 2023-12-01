@@ -8,7 +8,7 @@ public class Bias {
 	
 	public static List<Double> listaDeMatrizes(){
 		List<Double> lista1 = Arrays.asList(
-				13.28413744
+				-5.95807233
 				);
 		return lista1;
 	}

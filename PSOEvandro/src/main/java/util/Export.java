@@ -10,7 +10,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Export {
-	public static void exportExcel(List<List<List<Double>>> listaListaKernel) throws IOException {
+	public static void exportExcel(List<List<List<Double>>> listaListaKernel, List<Double> fullyConnected, List<Double> bias) throws IOException {
 		Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 		List<Sheet> listaPlanilhas = new ArrayList<Sheet>();
 		for (int i = 0; i < listaListaKernel.size(); i++) {
@@ -29,8 +29,28 @@ public class Export {
 
 			}
 		}
+		
+		Sheet sheetFully = workbook.createSheet("Fully"); // criando as planilhas de listas de kernels
+		sheetFully.createRow(0);
+		listaPlanilhas.add(sheetFully);
+		for (int k = 0; k < fullyConnected.size(); k++) {
 
-		FileOutputStream fileOut = new FileOutputStream("C:\\Users\\vandr\\desktop\\ListaKernels.xlsx");
+			listaPlanilhas.get(listaPlanilhas.size()-1).getRow(0).createCell(k)
+					.setCellValue(fullyConnected.get(k));
+			
+		}
+		
+		Sheet sheetBias = workbook.createSheet("Bias"); // criando as planilhas de listas de kernels
+		sheetBias.createRow(0);
+		listaPlanilhas.add(sheetBias);
+		for (int k = 0; k < bias.size(); k++) {
+
+			listaPlanilhas.get(listaPlanilhas.size()-1).getRow(0).createCell(k)
+					.setCellValue(bias.get(k));
+			
+		}
+
+		FileOutputStream fileOut = new FileOutputStream("C:\\Users\\Ana Capeletti\\Desktop\\ListaKernels.xlsx");
 		workbook.write(fileOut);
 		fileOut.close();
 	}
